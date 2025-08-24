@@ -4,57 +4,60 @@
   <meta charset="UTF-8">
   <title>Radetzky FM</title>
 
-  <!-- Viewport a mobil eszközökhöz -->
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Viewport -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <!-- Manifest -->
   <link rel="manifest" href="manifest.json">
 
-  <!-- Android és PWA ikonok -->
+  <!-- Ikonok -->
   <link rel="icon" type="image/png" sizes="128x128" href="icon-128x128.png">
   <link rel="icon" type="image/png" sizes="521x521" href="icon-521x521.png">
-
-  <!-- Apple ikon -->
   <link rel="apple-touch-icon" sizes="128x128" href="icon-128x128.png">
   <link rel="apple-touch-icon" sizes="521x521" href="icon-521x521.png">
 
   <style>
-    body {
+    html, body {
       margin: 0;
       padding: 0;
-      min-height: 100vh;
+      height: 100%;
       font-family: sans-serif;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      align-items: center;
       background: linear-gradient(to bottom, #000000, #ffffff);
       color: #999999;
     }
 
-    header {
-      margin-top: 24px;
-      font-size: 6vw; /* rugalmas betűméret */
-      font-weight: bold;
-      text-align: center;
-    }
-
-    footer {
-      margin-bottom: 24px;
-      width: 100%;
+    body {
       display: flex;
       flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    header {
+      font-size: 6vw;
+      font-weight: bold;
+      text-align: center;
+      padding: 16px 8px 0;
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
       align-items: center;
       gap: 12px;
-      padding: 0 16px;
+      width: 100%;
+      padding: 8px 16px;
       box-sizing: border-box;
     }
 
-    .player-container,
-    .metadata-box {
+    .metadata-box,
+    .player-container {
       background: #f5f5f5;
       border: 1px solid #ddd;
-      padding: 16px;
+      padding: 12px;
       width: 100%;
       max-width: 360px;
       text-align: center;
@@ -67,13 +70,19 @@
       width: 100%;
       border-radius: 4px;
     }
+
+    @media (min-height: 700px) {
+      header {
+        font-size: 32px;
+      }
+    }
   </style>
 </head>
 <body>
 
   <header>Radetzky FM</header>
 
-  <footer>
+  <main>
     <div class="metadata-box" id="metadataBox">
       <div id="dynamic-title">Betöltés...</div>
     </div>
@@ -84,7 +93,7 @@
         A böngésződ nem támogatja az audio lejátszást.
       </audio>
     </div>
-  </footer>
+  </main>
 
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   <script>
@@ -120,7 +129,7 @@
       });
     };
 
-    // Automatikus frissítés 15 másodpercenként
+    // Induláskor és 15 másodpercenként frissít
     window.fetchStreamTitle();
     setInterval(window.fetchStreamTitle, 15000);
   </script>
