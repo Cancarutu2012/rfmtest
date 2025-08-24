@@ -1,0 +1,21 @@
+{
+  "name": "Radetzky FM",
+  "short_name": "Radetzky",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "icon-128x128.png",
+      "sizes": "128x128",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-521x521.png",
+      "sizes": "521x521",
+      "type": "image/png"
+    }
+  ]
+}

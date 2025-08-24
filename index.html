@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8">
+  <title>Radetzky FM</title>
+  <!-- Manifest -->
+<link rel="manifest" href="manifest.json">
+
+<!-- Android és PWA ikonok -->
+<link rel="icon" type="image/png" sizes="128x128" href="icon-128x128.png">
+<link rel="icon" type="image/png" sizes="521x521" href="icon-521x521.png">
+
+<!-- Apple ikon -->
+<link rel="apple-touch-icon" sizes="128x128" href="icon-128x128.png">
+<link rel="apple-touch-icon" sizes="521x521" href="icon-521x521.png">
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      font-family: sans-serif;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      background: linear-gradient(to bottom, #000000, #ffffff); /* feketéből fehérbe átmenet */
+      color: #999999; /* fekete szöveg a világos háttéren is olvasható maradjon */
+    }
+	
+	.metadata-box {
+  background: #f5f5f5;
+  border: 1px solid #ddd;
+  padding: 16px;
+  width: 320px;
+  text-align: center;
+  border-radius: 4px;
+  font-family: sans-serif;
+  color: #000;
+}
+
+    header {
+      margin-top: 24px;
+      font-size: 32px;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    footer {
+      margin-bottom: 24px;
+    }
+
+    .player-container {
+      background: #f5f5f5; /* világos háttér a lejátszónál */
+      border: 1px solid #ddd;
+      padding: 16px;
+      width: 320px;
+      text-align: center;
+      border-radius: 4px;
+    }
+
+    audio {
+      width: 100%;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>Radetzky FM</header>
+
+  <footer>
+  <div class="metadata-box" id="metadataBox">
+  <div id="dynamic-title">Betöltés...</div>
+</div>
+    <div class="player-container">
+      <audio controls>
+        <source src="https://katolikusradio.hu:8001/radetzkyfm" type="audio/mpeg">
+        A böngésződ nem támogatja az audio lejátszást.
+      </audio>
+    </div>
+  </footer>
+<script>
+window.fetchStreamTitle = function() {
+      const proxyUrl = "https://api.allorigins.win/get?url=" + encodeURIComponent("http://katolikusradio.hu:9000/status-json.xsl");
+
+      
+  $.getJSON(proxyUrl, function(response) {
+    try {
+      console.log('Proxy response:', response);
+      const data = JSON.parse(response.contents);
+      console.log('Parsed data:', data);
+      let sources = data.icestats.source;
+      let stream = null;
+
+      if (Array.isArray(sources)) {
+        stream = sources.find(s => s.server_name === "Radetzky Fm");
+      } else if (sources.server_name === "Radetzky Fm") {
+        stream = sources;
+      }
+
+      if (stream && stream.title) {
+        $("#dynamic-title").text(stream.title);
+      } else if (!stream) {
+        $("#dynamic-title").text("--");
+      } else {
+        $("#dynamic-title").text("Nincs aktuális cím");
+      }
+    } catch (e) {
+      console.error('JSON parse error:', e);
+      $("#dynamic-title").text("--");
+    }
+  }).fail(function() {
+    console.error('AJAX request failed');
+    $("#dynamic-title").text("--");
+  });
+}</script>
+</body>
+</html>
