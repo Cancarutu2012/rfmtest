@@ -3,60 +3,64 @@
 <head>
   <meta charset="UTF-8">
   <title>Radetzky FM</title>
+
+  <!-- Viewport a mobil eszközökhöz -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
   <!-- Manifest -->
-<link rel="manifest" href="manifest.json">
+  <link rel="manifest" href="manifest.json">
 
-<!-- Android és PWA ikonok -->
-<link rel="icon" type="image/png" sizes="128x128" href="icon-128x128.png">
-<link rel="icon" type="image/png" sizes="521x521" href="icon-521x521.png">
+  <!-- Android és PWA ikonok -->
+  <link rel="icon" type="image/png" sizes="128x128" href="icon-128x128.png">
+  <link rel="icon" type="image/png" sizes="521x521" href="icon-521x521.png">
 
-<!-- Apple ikon -->
-<link rel="apple-touch-icon" sizes="128x128" href="icon-128x128.png">
-<link rel="apple-touch-icon" sizes="521x521" href="icon-521x521.png">
+  <!-- Apple ikon -->
+  <link rel="apple-touch-icon" sizes="128x128" href="icon-128x128.png">
+  <link rel="apple-touch-icon" sizes="521x521" href="icon-521x521.png">
 
   <style>
     body {
       margin: 0;
       padding: 0;
-      height: 100vh;
+      min-height: 100vh;
       font-family: sans-serif;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       align-items: center;
-      background: linear-gradient(to bottom, #000000, #ffffff); /* feketéből fehérbe átmenet */
-      color: #999999; /* fekete szöveg a világos háttéren is olvasható maradjon */
+      background: linear-gradient(to bottom, #000000, #ffffff);
+      color: #999999;
     }
-	
-	.metadata-box {
-  background: #f5f5f5;
-  border: 1px solid #ddd;
-  padding: 16px;
-  width: 320px;
-  text-align: center;
-  border-radius: 4px;
-  font-family: sans-serif;
-  color: #000;
-}
 
     header {
       margin-top: 24px;
-      font-size: 32px;
+      font-size: 6vw; /* rugalmas betűméret */
       font-weight: bold;
       text-align: center;
     }
 
     footer {
       margin-bottom: 24px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      padding: 0 16px;
+      box-sizing: border-box;
     }
 
-    .player-container {
-      background: #f5f5f5; /* világos háttér a lejátszónál */
+    .player-container,
+    .metadata-box {
+      background: #f5f5f5;
       border: 1px solid #ddd;
       padding: 16px;
-      width: 320px;
+      width: 100%;
+      max-width: 360px;
       text-align: center;
       border-radius: 4px;
+      box-sizing: border-box;
+      color: #000;
     }
 
     audio {
@@ -70,9 +74,10 @@
   <header>Radetzky FM</header>
 
   <footer>
-  <div class="metadata-box" id="metadataBox">
-  <div id="dynamic-title">Betöltés...</div>
-</div>
+    <div class="metadata-box" id="metadataBox">
+      <div id="dynamic-title">Betöltés...</div>
+    </div>
+
     <div class="player-container">
       <audio controls>
         <source src="https://katolikusradio.hu:8001/radetzkyfm" type="audio/mpeg">
@@ -80,40 +85,44 @@
       </audio>
     </div>
   </footer>
-<script>
-window.fetchStreamTitle = function() {
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script>
+    window.fetchStreamTitle = function () {
       const proxyUrl = "https://api.allorigins.win/get?url=" + encodeURIComponent("http://katolikusradio.hu:9000/status-json.xsl");
 
-      
-  $.getJSON(proxyUrl, function(response) {
-    try {
-      console.log('Proxy response:', response);
-      const data = JSON.parse(response.contents);
-      console.log('Parsed data:', data);
-      let sources = data.icestats.source;
-      let stream = null;
+      $.getJSON(proxyUrl, function (response) {
+        try {
+          const data = JSON.parse(response.contents);
+          let sources = data.icestats.source;
+          let stream = null;
 
-      if (Array.isArray(sources)) {
-        stream = sources.find(s => s.server_name === "Radetzky Fm");
-      } else if (sources.server_name === "Radetzky Fm") {
-        stream = sources;
-      }
+          if (Array.isArray(sources)) {
+            stream = sources.find(s => s.server_name === "Radetzky Fm");
+          } else if (sources.server_name === "Radetzky Fm") {
+            stream = sources;
+          }
 
-      if (stream && stream.title) {
-        $("#dynamic-title").text(stream.title);
-      } else if (!stream) {
+          if (stream && stream.title) {
+            $("#dynamic-title").text(stream.title);
+          } else if (!stream) {
+            $("#dynamic-title").text("--");
+          } else {
+            $("#dynamic-title").text("Nincs aktuális cím");
+          }
+        } catch (e) {
+          console.error('JSON parse error:', e);
+          $("#dynamic-title").text("--");
+        }
+      }).fail(function () {
+        console.error('AJAX request failed');
         $("#dynamic-title").text("--");
-      } else {
-        $("#dynamic-title").text("Nincs aktuális cím");
-      }
-    } catch (e) {
-      console.error('JSON parse error:', e);
-      $("#dynamic-title").text("--");
-    }
-  }).fail(function() {
-    console.error('AJAX request failed');
-    $("#dynamic-title").text("--");
-  });
-}</script>
+      });
+    };
+
+    // Automatikus frissítés 15 másodpercenként
+    window.fetchStreamTitle();
+    setInterval(window.fetchStreamTitle, 15000);
+  </script>
 </body>
 </html>
