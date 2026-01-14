@@ -139,7 +139,7 @@
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   <script>
     window.fetchStreamTitle = function () {
-      const proxyUrl = "https://api.allorigins.win/get?url=" + encodeURIComponent("http://katolikusradio.hu:9000/status-json.xsl");
+      const proxyUrl = "https://api.codetabs.com/v1/proxy/?quest=" + encodeURIComponent("http://katolikusradio.hu:9000/status-json.xsl");
 
       $.getJSON(proxyUrl, function (response) {
         try {
@@ -176,6 +176,7 @@
   </script>
 </body>
 </html>
+
 
 
 
