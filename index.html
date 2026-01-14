@@ -86,10 +86,38 @@
       width: 100%;
       border-radius: 4px;
     }
+
+    .title-wrap {
+  position: relative;
+  display: inline-block;
+}
+
+.title-wrap .bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  z-index: 0;
+}
+
+.title-wrap .text {
+  position: relative;
+  z-index: 1;
+  font-size: 32px;
+  font-weight: bold;
+  color: white;
+  padding: 12px 20px;
+}
+
   </style>
 </head>
 <body>
   <header>Radetzky FM</header>
+  <div class="title-wrap">
+  <img src="logotrsparent.png" class="bg">
+  
+</div>
 
   <main></main> <!-- ez kitölti a helyet a header és footer között -->
 
@@ -147,6 +175,7 @@
   </script>
 </body>
 </html>
+
 
 
 
