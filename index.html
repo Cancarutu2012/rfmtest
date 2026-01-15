@@ -159,7 +159,8 @@
 } else if (!stream) {
             $("#dynamic-title").text("--");
           } else {
-            $("#dynamic-title").text("Nincs aktuális cím");
+            $("#dynamic-title").text("Csak a legjobbak!");
+           document.title = "Radetzky FM + Csak a legjobbak!";
           }
         } catch (e) {
           console.error('JSON parse error:', e);
@@ -176,6 +177,7 @@ fetchStreamTitle();
   </script>
 </body>
 </html>
+
 
 
 
