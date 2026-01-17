@@ -164,6 +164,17 @@ document.title = data.record.playing;
             logo.src = "rfm.png"; // ide jön az új logó fájl neve
         }
 
+      if ('mediaSession' in navigator) {
+            navigator.mediaSession.metadata = new MediaMetadata({
+                title: playingText,
+                artist: "Radetzky FM",
+                album: "Élő adás",
+                artwork: [
+                    { src: "rfm.png", sizes: "512x512", type: "image/png" }
+                ]
+            });
+        }
+
     } catch (e) {
         document.getElementById("dynamic-title").textContent = "Hiba: " + e.message;
     }
@@ -175,6 +186,7 @@ setInterval(updateMeta, 5000);
   </script>
 </body>
 </html>
+
 
 
 
