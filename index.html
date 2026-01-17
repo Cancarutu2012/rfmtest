@@ -159,6 +159,11 @@ async function updateMeta() {
 // frissítsük a page title-t is
 document.title = data.record.playing;
 
+      const logo = document.querySelector(".title-wrap img.bg");
+        if (logo) {
+            logo.src = "rfm.png"; // ide jön az új logó fájl neve
+        }
+
     } catch (e) {
         document.getElementById("dynamic-title").textContent = "Hiba: " + e.message;
     }
@@ -170,6 +175,7 @@ setInterval(updateMeta, 5000);
   </script>
 </body>
 </html>
+
 
 
 
