@@ -157,7 +157,7 @@ async function updateMeta() {
         // csak a tartalom, “Most szól:” nélkül
         document.getElementById("dynamic-title").textContent = `${data.record.playing}`;
 // frissítsük a page title-t is
-document.title = "Radetzky FM – " + data.record.playing;
+document.title = data.record.playing;
 
     } catch (e) {
         document.getElementById("dynamic-title").textContent = "Hiba: " + e.message;
@@ -170,6 +170,7 @@ setInterval(updateMeta, 5000);
   </script>
 </body>
 </html>
+
 
 
 
