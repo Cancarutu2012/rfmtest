@@ -138,45 +138,36 @@
 
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   <script>
-    window.fetchStreamTitle = function () {
-      const proxyUrl = "https://api.allorigins.win/get?url=" + encodeURIComponent("https://katolikusradio.hu:8001/status-json.xsl");
+    const BIN_ID = "696bca7fae596e708fe315dd";
+const READ_KEY = "$2a$10$dshD4vVV4afJO3EHmk9WqOoVKatrdqTxFm.IbMsNhAe5K8p/RkRMC";
+const URL = `https://api.jsonbin.io/v3/b/${BIN_ID}/latest`;
 
-      $.getJSON(proxyUrl, function (response) {
-        try {
-          const data = JSON.parse(response.contents);
-          let sources = data.icestats.source;
-          let stream = null;
+async function updateMeta() {
+    try {
+        const res = await fetch(URL, {
+            headers: {
+                "X-Master-Key": READ_KEY
+            }
+        });
 
-          if (Array.isArray(sources)) {
-            stream = sources.find(s => s.server_name === "Radetzky FM");
-          } else if (sources.server_name === "Radetzky FM") {
-            stream = sources;
-          }
+        if (!res.ok) throw new Error("Hiba a JSON lekérésénél");
 
-          if (stream && stream.title) {
-  $("#dynamic-title").text(stream.title);
-  document.title = "Radetzky FM – " + stream.title;
-} else if (!stream) {
-            $("#dynamic-title").text("--");
-          } else {
-            $("#dynamic-title").text("Csak a legjobbak!");
-           document.title = "Radetzky FM + Csak a legjobbak!";
-          }
-        } catch (e) {
-          console.error('JSON parse error:', e);
-          $("#dynamic-title").text("--");
-        }
-      }).fail(function () {
-        console.error('AJAX request failed');
-        $("#dynamic-title").text("--");
-      });
-    };
-fetchStreamTitle();
-    window.fetchStreamTitle();
-    setInterval(window.fetchStreamTitle, 15000);
+        const data = await res.json();
+
+        // csak a tartalom, “Most szól:” nélkül
+        document.getElementById("dynamic-title").textContent = `${data.record.playing}`;
+    } catch (e) {
+        document.getElementById("dynamic-title").textContent = "Hiba: " + e.message;
+    }
+}
+
+// frissítés 5 másodpercenként
+updateMeta();
+setInterval(updateMeta, 5000);
   </script>
 </body>
 </html>
+
 
 
 
