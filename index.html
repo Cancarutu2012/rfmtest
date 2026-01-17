@@ -166,7 +166,7 @@ document.title = data.record.playing;
 
       if ('mediaSession' in navigator) {
             navigator.mediaSession.metadata = new MediaMetadata({
-                title: playingText,
+                title: data.record.playing,
                 artist: "Radetzky FM",
                 album: "Élő adás",
                 artwork: [
@@ -186,6 +186,7 @@ setInterval(updateMeta, 5000);
   </script>
 </body>
 </html>
+
 
 
 
